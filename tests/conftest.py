@@ -5,7 +5,7 @@ from selenium import webdriver
 
 @pytest.fixture(scope='function', autouse=True)
 def browser_management():
-    browser.config.base_url = 'https://demoqa.com/automation-practice-form'
+    browser.config.base_url = 'https://demoqa.com'
     browser.config.driver = 'chrome'
 
     # driver_options = webdriver.ChromeOptions()
