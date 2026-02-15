@@ -1,6 +1,6 @@
 import os
 
-from selene import browser, have, command, be
+from selene import browser, have, command
 
 
 def test_registration_form():
@@ -43,17 +43,17 @@ def test_registration_form():
     browser.element('#dateOfBirthInput').click()
     browser.element('.react-datepicker__month-select').type(form_data['month'])
     browser.element('.react-datepicker__year-select').type(form_data['year'])
-    browser.element(f'.react-datepicker__day--0{form_data['day']}').click()
+    browser.element(f'.react-datepicker__day--0{form_data['day']}:not(.react-datepicker__day--outside-month)').click()
 
     # Выбор предметов из выпадающего списка
-    browser.element('#subjectsInput').type(form_data['subjects'][0][:2])
-    browser.all('#react-select-2-listbox').element_by(have.text(form_data['subjects'][0])).click()
+    browser.element('#subjectsInput').type(form_data['subjects'][0][:3])
+    browser.all('[class$="-option"]').element_by(have.exact_text(form_data['subjects'][0])).click()
     browser.element('#subjectsInput').type(form_data['subjects'][1][:1])
-    browser.all('#react-select-2-listbox').element_by(have.text(form_data['subjects'][1])).click()
+    browser.all('[class$="-option"]').element_by(have.text(form_data['subjects'][1])).click()
 
     # Выбор хобби
-    browser.all('.form-check-label').element_by(have.text(form_data['hobbies'][0])).click()
-    browser.all('.form-check-label').element_by(have.text(form_data['hobbies'][1])).click()
+    browser.all('.form-check-label').element_by(have.exact_text(form_data['hobbies'][0])).click()
+    browser.all('.form-check-label').element_by(have.exact_text(form_data['hobbies'][1])).click()
 
     # Загрузка фото
     browser.element('#uploadPicture').set_value(os.path.abspath('tests/resources/images.jpeg'))
@@ -61,14 +61,12 @@ def test_registration_form():
     # Ввод адреса
     browser.element('#currentAddress').type(form_data['current_address'])
 
-    # Выбор штата и города из выпадающего списка
-    browser.element('#react-select-3-input').click()
-    browser.all('[class$="-option"]').element_by(have.exact_text(form_data['state'])).click()
-    browser.element('#react-select-4-input').click()
-    browser.all('[class$="-option"]').element_by(have.exact_text(form_data['city'])).click()
+    # Выбор штата и города
+    browser.element('#state input').type(form_data['state']).press_enter()
+    browser.element('#city input').type(form_data['city']).press_enter()
 
     # Нажатие кнопки Отправить
-    browser.element('#submit').press_enter()
+    browser.element('#submit').perform(command.js.click)
 
     # Проверка поп-ап
     check_pop_up(form_data)
