@@ -1,4 +1,5 @@
-from demoqa_tests.resource import RegistrationPage
+from demoqa_tests.pages.registration_page import RegistrationPage
+from demoqa_tests import resource
 
 
 def test_registration_form():
@@ -44,7 +45,7 @@ def test_registration_form():
     # Пример через круглые скобки
     (
         registration_page
-        .upload_picture(f'tests/resources/{form_data["photo"]}')
+        .upload_picture(resource.path(form_data["photo"]))
         .fill_current_address(form_data['current_address'])
         .fill_state(form_data['state'])
         .fill_city(form_data['city'])
