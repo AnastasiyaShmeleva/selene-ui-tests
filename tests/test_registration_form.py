@@ -1,36 +1,35 @@
-from demoqa_tests.data import users
-from demoqa_tests.pages.registration_page import RegistrationPage
 from demoqa_tests import resource
+from demoqa_tests.application import app
+from demoqa_tests.data import users
 
 
 def test_registration_form():
     # Подготавливаем тестовые данные
     student = users.student
 
-    registration_page = RegistrationPage()
-    registration_page.open()
+    app.registration_page.open()
 
-    registration_page \
+    app.registration_page \
         .fill_first_name(student.first_name) \
         .fill_last_name(student.last_name) \
         .fill_email(student.email) \
         .select_gender(student.gender) \
         .fill_mobile_number(student.number) \
         .select_date_of_birth(
-            student.birthday.day,
-            student.birthday.month,
-            student.birthday.year,
-        )
+        student.birthday.day,
+        student.birthday.month,
+        student.birthday.year,
+    )
 
     for subject in student.subjects:
-        registration_page.select_subject(subject)
+        app.registration_page.select_subject(subject)
 
     for hobby in student.hobbies:
-        registration_page.select_hobby(hobby)
+        app.registration_page.select_hobby(hobby)
 
     # Пример через круглые скобки
     (
-        registration_page
+        app.registration_page
         .upload_picture(resource.path(student.picture))
         .fill_current_address(student.current_address)
         .fill_state(student.state)
@@ -39,4 +38,4 @@ def test_registration_form():
     )
 
     # Проверка поп-ап
-    registration_page.should_have_registered(student)
+    app.registration_page.should_have_registered(student)
