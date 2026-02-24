@@ -1,5 +1,8 @@
 from selene import browser, have, command
 
+from demoqa_tests.data.users import User
+
+
 class RegistrationPage:
     def __init__(self):
         self.first_name = browser.element('#firstName')
@@ -11,14 +14,13 @@ class RegistrationPage:
         self.month_select = browser.element('.react-datepicker__month-select')
         self.year_select = browser.element('.react-datepicker__year-select')
         self.subjects_input = browser.element('#subjectsInput')
-        self.subjects = browser.all('[class$="-option"]')
         self.hobbies = browser.all('.form-check-label')
         self.upload_picture_input = browser.element('#uploadPicture')
         self.current_address = browser.element('#currentAddress')
         self.state_input = browser.element('#state input')
         self.city_input = browser.element('#city input')
         self.submit_button = browser.element('#submit')
-        self.result_table_cells = browser.element('.table-responsive').all('td').even
+        self.result_table_cells = browser.element('.table-responsive').all('td')
 
     def open(self):
         browser.open('/automation-practice-form')
@@ -58,8 +60,7 @@ class RegistrationPage:
         return self
 
     def select_subject(self, value):
-        self.subjects_input.type(value[:2])
-        self.subjects.element_by(have.exact_text(value)).click()
+        self.subjects_input.type(value).press_enter()
         return self
 
     def select_hobby(self, value):
@@ -86,17 +87,17 @@ class RegistrationPage:
         self.submit_button.perform(command.js.click)
         return self
 
-    def should_have_registered(self, data):
-        self.result_table_cells.should(have.exact_texts(
-            f"{data['first_name']} {data['last_name']}",
-            data['email'],
-            data['gender'],
-            data['number'],
-            f"{data['day']} {data['month']},{data['year']}",
-            ', '.join(data['subjects']),
-            ', '.join(data['hobbies']),
-            data['photo'],
-            data['current_address'],
-            f"{data['state']} {data['city']}"
+    def should_have_registered(self, user: User):
+        self.result_table_cells.even.should(have.exact_texts(
+            f"{user.first_name} {user.last_name}",
+            user.email,
+            user.gender,
+            user.number,
+            f"{user.birthday.day} {user.birthday.month},{user.birthday.year}",
+            ', '.join(user.subjects),
+            ', '.join(user.hobbies),
+            user.picture,
+            user.current_address,
+            f"{user.state} {user.city}"
         ))
         return self
