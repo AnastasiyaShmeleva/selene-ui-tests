@@ -16,11 +16,7 @@ def test_registration_form():
         .fill_email(student.email) \
         .select_gender(student.gender) \
         .fill_mobile_number(student.number) \
-        .select_date_of_birth(
-        student.birthday.day,
-        student.birthday.month,
-        student.birthday.year
-    )
+        .select_date_of_birth(student.date_of_birth)
 
     app.registration_page.select_subject(student.subjects)
     app.registration_page.select_hobby(student.hobbies)

@@ -44,29 +44,29 @@ class RegistrationPage:
         self.email.type(value)
         return self
 
-    def select_gender(self, value):
-        self.gender.element_by(have.value(value)).element('..').click()
+    def select_gender(self, gender):
+        self.gender.element_by(have.value(gender.value)).element('..').click()
         return self
 
     def fill_mobile_number(self, value):
         self.mobile_number.type(value)
         return self
 
-    def select_date_of_birth(self, day, month, year):
+    def select_date_of_birth(self, date):
         self.date_of_birth.click()
-        self.month_select.type(month)
-        self.year_select.type(year)
-        browser.element(f'.react-datepicker__day--0{day}:not(.react-datepicker__day--outside-month)').click()
+        self.month_select.type(date.strftime('%B'))
+        self.year_select.type(str(date.year))
+        browser.element(f'.react-datepicker__day--0{str(date.day)}:not(.react-datepicker__day--outside-month)').click()
         return self
 
     def select_subject(self, subjects):
         for subject in subjects:
-            self.subjects_input.type(subject).press_enter()
+            self.subjects_input.type(subject.value).press_enter()
         return self
 
     def select_hobby(self, hobbies):
         for hobby in hobbies:
-            self.hobbies.element_by(have.exact_text(hobby)).click()
+            self.hobbies.element_by(have.exact_text(hobby.value)).click()
         return self
 
     def upload_picture(self, path):
@@ -93,11 +93,11 @@ class RegistrationPage:
         self.result_table_cells.even.should(have.exact_texts(
             f"{user.first_name} {user.last_name}",
             user.email,
-            user.gender,
+            user.gender.value,
             user.number,
-            f"{user.birthday.day} {user.birthday.month},{user.birthday.year}",
-            ', '.join(user.subjects),
-            ', '.join(user.hobbies),
+            user.date_of_birth.strftime('%d %B,%Y'),
+            ', '.join(subject.value for subject in user.subjects),
+            ', '.join(hobby.value for hobby in user.hobbies),
             user.picture,
             user.current_address,
             f"{user.state} {user.city}"
