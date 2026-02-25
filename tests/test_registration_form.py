@@ -4,11 +4,12 @@ from demoqa_tests.data import users
 
 
 def test_registration_form():
-    # Подготавливаем тестовые данные
+    # GIVEN
     student = users.student
 
     app.registration_page.open()
 
+    # WHEN
     app.registration_page \
         .fill_first_name(student.first_name) \
         .fill_last_name(student.last_name) \
@@ -18,14 +19,11 @@ def test_registration_form():
         .select_date_of_birth(
         student.birthday.day,
         student.birthday.month,
-        student.birthday.year,
+        student.birthday.year
     )
 
-    for subject in student.subjects:
-        app.registration_page.select_subject(subject)
-
-    for hobby in student.hobbies:
-        app.registration_page.select_hobby(hobby)
+    app.registration_page.select_subject(student.subjects)
+    app.registration_page.select_hobby(student.hobbies)
 
     # Пример через круглые скобки
     (
@@ -37,5 +35,5 @@ def test_registration_form():
         .submit()
     )
 
-    # Проверка поп-ап
+    # THEN
     app.registration_page.should_have_registered(student)

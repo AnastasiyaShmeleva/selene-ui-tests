@@ -59,12 +59,14 @@ class RegistrationPage:
         browser.element(f'.react-datepicker__day--0{day}:not(.react-datepicker__day--outside-month)').click()
         return self
 
-    def select_subject(self, value):
-        self.subjects_input.type(value).press_enter()
+    def select_subject(self, subjects):
+        for subject in subjects:
+            self.subjects_input.type(subject).press_enter()
         return self
 
-    def select_hobby(self, value):
-        self.hobbies.element_by(have.exact_text(value)).click()
+    def select_hobby(self, hobbies):
+        for hobby in hobbies:
+            self.hobbies.element_by(have.exact_text(hobby)).click()
         return self
 
     def upload_picture(self, path):
