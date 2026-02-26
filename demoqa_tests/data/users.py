@@ -8,16 +8,25 @@ class Gender(Enum):
     FEMALE = 'Female'
     OTHER = 'Other'
 
+    def __str__(self):
+        return self.value
+
 
 class Subject(Enum):
     HISTORY = 'History'
     ENGLISH = 'English'
+
+    def __str__(self):
+        return self.value
 
 
 class Hobby(Enum):
     SPORTS = 'Sports'
     READING = 'Reading'
     MUSIC = 'Music'
+
+    def __str__(self):
+        return self.value
 
 
 @dataclasses.dataclass

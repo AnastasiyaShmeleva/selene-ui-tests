@@ -1,3 +1,4 @@
+import allure
 from selene import browser, have, command
 
 from demoqa_tests.data.users import User
@@ -22,6 +23,7 @@ class RegistrationPage:
         self.submit_button = browser.element('#submit')
         self.result_table_cells = browser.element('.table-responsive').all('td')
 
+    @allure.step('Открываем страницу регистрации')
     def open(self):
         browser.open('/automation-practice-form')
 
@@ -32,26 +34,32 @@ class RegistrationPage:
 
         return self
 
+    @allure.step('Заполняем имя: {value}')
     def fill_first_name(self, value):
         self.first_name.type(value)
         return self
 
+    @allure.step('Заполняем фамилию: {value}')
     def fill_last_name(self, value):
         self.last_name.type(value)
         return self
 
+    @allure.step('Заполняем почту: {value}')
     def fill_email(self, value):
         self.email.type(value)
         return self
 
     def select_gender(self, gender):
-        self.gender.element_by(have.value(gender.value)).element('..').click()
+        with allure.step(f'Выбираем пол: {gender.value}'):
+            self.gender.element_by(have.value(gender.value)).element('..').click()
         return self
 
+    @allure.step('Заполняем номер телефона: {value}')
     def fill_mobile_number(self, value):
         self.mobile_number.type(value)
         return self
 
+    # @allure.step('Выбираем дату рождения: {date.strftime("%d %B,%Y")}')
     def select_date_of_birth(self, date):
         self.date_of_birth.click()
         self.month_select.type(date.strftime('%B'))
@@ -59,36 +67,48 @@ class RegistrationPage:
         browser.element(f'.react-datepicker__day--0{str(date.day)}:not(.react-datepicker__day--outside-month)').click()
         return self
 
-    def select_subject(self, subjects):
-        for subject in subjects:
-            self.subjects_input.type(subject.value).press_enter()
+    def select_subjects(self, subjects):
+        subjects_names = ', '.join(subject.value for subject in subjects)
+
+        with allure.step(f'Выбираем предметы: {subjects_names}'):
+            for subject in subjects:
+                self.subjects_input.type(subject.value).press_enter()
         return self
 
-    def select_hobby(self, hobbies):
-        for hobby in hobbies:
-            self.hobbies.element_by(have.exact_text(hobby.value)).click()
+    def select_hobbies(self, hobbies):
+        hobbies_names = ', '.join(hobby.value for hobby in hobbies)
+
+        with allure.step(f'Выбираем хобби: {hobbies_names}'):
+            for hobby in hobbies:
+                self.hobbies.element_by(have.exact_text(hobby.value)).click()
         return self
 
+    @allure.step('Загружаем фото')
     def upload_picture(self, path):
         self.upload_picture_input.set_value(path)
         return self
 
+    @allure.step('Заполняем адрес: {value}')
     def fill_current_address(self, value):
         self.current_address.type(value)
         return self
 
+    @allure.step('Выбираем штат: {value}')
     def fill_state(self, value):
         self.state_input.type(value).press_enter()
         return self
 
+    @allure.step('Выбираем город: {value}')
     def fill_city(self, value):
         self.city_input.type(value).press_enter()
         return self
 
+    @allure.step('Отправляем форму')
     def submit(self):
         self.submit_button.perform(command.js.click)
         return self
 
+    @allure.step('Проверяем заполненные данные')
     def should_have_registered(self, user: User):
         self.result_table_cells.even.should(have.exact_texts(
             f"{user.first_name} {user.last_name}",
