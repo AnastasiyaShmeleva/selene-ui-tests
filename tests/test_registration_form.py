@@ -1,8 +1,12 @@
+import allure
+
 from demoqa_tests import resource
 from demoqa_tests.application import app
 from demoqa_tests.data import users
 
-
+@allure.feature('Регистрация')
+@allure.story('Валидные данные')
+@allure.title('Регистрация нового пользователя')
 def test_registration_form():
     # GIVEN
     student = users.student
@@ -18,8 +22,8 @@ def test_registration_form():
         .fill_mobile_number(student.number) \
         .select_date_of_birth(student.date_of_birth)
 
-    app.registration_page.select_subject(student.subjects)
-    app.registration_page.select_hobby(student.hobbies)
+    app.registration_page.select_subjects(student.subjects)
+    app.registration_page.select_hobbies(student.hobbies)
 
     # Пример через круглые скобки
     (
